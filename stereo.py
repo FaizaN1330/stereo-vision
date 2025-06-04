@@ -97,11 +97,11 @@ def post_process(disp_matrix):
             if np.absolute(pp_disp[y, x] - avg) > 5:
                 pp_disp[y, x] = avg
 
-            # MODE
-            if x > 12 and x < (pp_disp.shape[0] - 12):
+            # Replace mode calculation with median (often more robust):
+             if x > 12 and x < (pp_disp.shape[1] - 12) and y >= 12 and y < (pp_disp.shape[0] - 12):
                 if pp_disp[y, x] > 25:
-                    mode = stats.mode(pp_disp[y-12:y+13, x-12:x+13].flatten())
-                    pp_disp[y, x] = mode[0][0]
+                    window = pp_disp[y-12:y+13, x-12:x+13].flatten()
+                    pp_disp[y, x] = np.median(window)
 
             # THRESHOLD
             if pp_disp[y, x] > 30:
